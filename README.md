@@ -6,7 +6,9 @@
 <p align="center">
   <img alt="Commit messages extractor" src="https://imgur.com/Qnxbuxe.png">
 </p>
-
+<p align="center">
+  <img alt="Ask GPT" src="https://imgur.com/ocLOA16.png">
+</p>
 
 
 ## Install
