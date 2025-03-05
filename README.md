@@ -6,6 +6,9 @@
 <p align="center">
   <img alt="Commit messages extractor" src="https://imgur.com/Qnxbuxe.png">
 </p>
+
+Copy paste, `pbcopy` that and ask GPT to summarize it for you.
+
 <p align="center">
   <img alt="Ask GPT" src="https://imgur.com/ocLOA16.png">
 </p>
@@ -34,6 +37,12 @@ wdhd --base-url=ghe.enterprise-me.com --token=$GHE_TOKEN --user=kevin.cobain
 
 # Custom prompt
 wdhd --prompt="What did he do today?" --days=2 --token=$GHE_TOKEN --user=kevin.cobain
+```
+
+## From Source
+
+```sh
+go run main.go -h
 ```
 
 
