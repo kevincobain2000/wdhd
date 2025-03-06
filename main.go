@@ -61,7 +61,6 @@ func main() {
 			fmt.Printf("- %s: %s\n", commit.GetCommit().GetCommitter().GetDate().Format("2006-01-02 15:04:05"), message)
 			prevMessage = message
 		}
-
 	}
 }
 
