@@ -51,11 +51,17 @@ func main() {
 		counter++
 		fmt.Printf("\n%d) Contributions on org:%s, repo:%s\n", counter, owner, repoName)
 
+		var prevMessage string
 		for _, commit := range commits {
 			message := commit.GetCommit().GetMessage()
 			message = removeEmptyLines(message)
+			if message == prevMessage {
+				continue
+			}
 			fmt.Printf("- %s: %s\n", commit.GetCommit().GetCommitter().GetDate().Format("2006-01-02 15:04:05"), message)
+			prevMessage = message
 		}
+
 	}
 }
 
