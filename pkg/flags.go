@@ -17,6 +17,9 @@ The format for each commit is <date>: <message>
 Summarize contributions on each org and repo in about 1-2 sentences each to highlight the key contributions
 How smart was the developer, how much did they contribute, and how did they help the team?
 How much %age of his time was spent overall?
+How many people did he help?
+How many people did he collaborate with? And list the names of those people uniquely.
+How many review comments did he make? And what were their impacts?
 If there are merges, then count those as his tech lead contributions.
 If there are bug fixes, then count those as his debugging contributions.
 If there are new features, then count those as his feature contributions.

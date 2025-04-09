@@ -58,8 +58,25 @@ func main() {
 			if message == prevMessage {
 				continue
 			}
-			fmt.Printf("- %s: %s\n", commit.GetCommit().GetCommitter().GetDate().Format("2006-01-02 15:04:05"), message)
+			fmt.Printf("- Commits on %s: %s\n", commit.GetCommit().GetCommitter().GetDate().Format("2006-01-02 15:04:05"), message)
+
 			prevMessage = message
+		}
+
+		comments, prComments, err := githubHandler.FetchUserComments(owner, repoName)
+		if err != nil {
+			log.Printf("Error fetching comments for org:%s, repo:%s: %v", owner, repoName, err)
+			continue
+		}
+
+		if len(comments) > 0 || len(prComments) > 0 {
+			fmt.Printf("\nComments on org:%s, repo:%s\n", owner, repoName)
+			for _, comment := range comments {
+				fmt.Printf("- Issue Comment: %s\n", comment.GetBody())
+			}
+			for _, prComment := range prComments {
+				fmt.Printf("- PR Comment: %s\n", prComment.GetBody())
+			}
 		}
 	}
 }

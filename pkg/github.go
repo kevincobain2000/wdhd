@@ -61,28 +61,6 @@ func (h *GithubHandler) FetchCommits(owner, repo string, since, until time.Time)
 	return allCommits, nil
 }
 
-// func (h *GithubHandler) FetchRepos() ([]*github.Repository, error) {
-// 	var allRepos []*github.Repository
-// 	opt := &github.RepositoryListOptions{
-// 		ListOptions: github.ListOptions{
-// 			PerPage: 100,
-// 		},
-// 	}
-
-// 	for {
-// 		repos, resp, err := h.githubClient.Repositories.List(context.Background(), h.flags.User, opt)
-// 		if err != nil {
-// 			return nil, err
-// 		}
-// 		allRepos = append(allRepos, repos...)
-// 		if resp.NextPage == 0 {
-// 			break
-// 		}
-// 		opt.Page = resp.NextPage
-// 	}
-
-//		return allRepos, nil
-//	}
 func (h *GithubHandler) FetchRepos() ([]*github.Repository, error) {
 	var allRepos []*github.Repository
 	opt := &github.RepositoryListOptions{ListOptions: github.ListOptions{PerPage: 100}}
@@ -128,4 +106,59 @@ func (h *GithubHandler) FetchRepos() ([]*github.Repository, error) {
 	}
 
 	return allRepos, nil
+}
+
+func (h *GithubHandler) FetchUserComments(owner, repo string) ([]*github.IssueComment, []*github.PullRequestComment, error) {
+	var issueComments []*github.IssueComment
+	var prComments []*github.PullRequestComment
+
+	// Fetch issue comments
+	issueOpt := &github.IssueListCommentsOptions{
+		ListOptions: github.ListOptions{PerPage: 100},
+	}
+	for {
+		comments, resp, err := h.githubClient.Issues.ListComments(context.Background(), owner, repo, 0, issueOpt)
+		if err != nil {
+			return nil, nil, fmt.Errorf("error fetching issue comments: %w", err)
+		}
+		issueComments = append(issueComments, comments...)
+		if resp.NextPage == 0 {
+			break
+		}
+		issueOpt.Page = resp.NextPage
+	}
+
+	// Fetch pull request comments
+	prOpt := &github.PullRequestListCommentsOptions{
+		ListOptions: github.ListOptions{PerPage: 100},
+	}
+	for {
+		comments, resp, err := h.githubClient.PullRequests.ListComments(context.Background(), owner, repo, 0, prOpt)
+		if err != nil {
+			return nil, nil, fmt.Errorf("error fetching pull request comments: %w", err)
+		}
+		prComments = append(prComments, comments...)
+		if resp.NextPage == 0 {
+			break
+		}
+		prOpt.Page = resp.NextPage
+	}
+
+	// Filter issue comments by user
+	filteredIssueComments := []*github.IssueComment{}
+	for _, comment := range issueComments {
+		if comment.GetUser().GetLogin() == h.flags.User {
+			filteredIssueComments = append(filteredIssueComments, comment)
+		}
+	}
+
+	// Filter PR comments by user
+	filteredPRComments := []*github.PullRequestComment{}
+	for _, comment := range prComments {
+		if comment.GetUser().GetLogin() == h.flags.User {
+			filteredPRComments = append(filteredPRComments, comment)
+		}
+	}
+
+	return filteredIssueComments, filteredPRComments, nil
 }
